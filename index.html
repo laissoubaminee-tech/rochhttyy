@@ -96,29 +96,6 @@ body{
   transition: opacity 1.5s ease, filter 1.5s ease;
 }
 
-/* اسم روشتي داخل القلب */
-.heart {
-    position: relative;
-}
-
-.heart-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 22px;
-    font-weight: bold;
-    color: #ffffff;
-    text-shadow: 0 0 10px rgba(255,255,255,0.8);
-    animation: textPulse 2s infinite ease-in-out;
-}
-
-@keyframes textPulse {
-    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-    50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.8; }
-    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-}
-
 /* زر القلب */
 #smallHeartBtn{
   position:absolute;
@@ -195,14 +172,7 @@ body{
 </audio>
 
 <div class="stars" id="stars"></div>
-
-<!-- القلب مع اسم روشتي -->
-<div id="heart">
-    <div class="heart">
-        <span class="heart-text">روشتي</span>
-    </div>
-</div>
-
+<div id="heart"></div>
 <div id="innerPoem"></div>
 <button id="smallHeartBtn"></button>
 
@@ -214,8 +184,7 @@ body{
 <script>
 
 /* تشغيل الموسيقى */
-const bgMusic = document.
-getElementById("bgMusic");
+const bgMusic = document.getElementById("bgMusic");
 window.addEventListener("load", () => {
   let playPromise = bgMusic.play();
   if (playPromise !== undefined) {
@@ -239,7 +208,7 @@ for(let i=0;i<80;i++){
 }
 
 /* كلمات القلب */
-const heartEl=document.getElementById("heart");
+const heart=document.getElementById("heart");
 const totalWords=120;
 const scale=11;
 const speed=0.004;
@@ -249,10 +218,21 @@ for(let i=0;i<totalWords;i++){
   let span=document.createElement("span");
   span.className="word";
   span.innerText="أحبك";
-  heartEl.appendChild(span);
+  heart.appendChild(span);
   words.push({el:span,t:t});
 }
 
+let showRochty=true;
+setInterval(()=>{
+  words.
+forEach((obj,i)=>{
+    if(i%10===0){
+      obj.el.innerText=showRochty?"روشتي":"أحبك";
+      obj.el.style.color=showRochty?"#ff4da6":"#f7cde2";
+    }
+  });
+  showRochty=!showRochty;
+},2000);
 function animateWords(){
   words.forEach(obj=>{
     obj.t+=speed;
@@ -305,8 +285,8 @@ smallHeartBtn.addEventListener("click",()=>{
   const heartsContainer=document.getElementById("floatingHeartsContainer");
 
   document.getElementById("stars").style.opacity=0;
-  heartEl.style.opacity=0;
-  heartEl.style.transform="scale(0.8)";
+  heart.style.opacity=0;
+  heart.style.transform="scale(0.8)";
 
   setTimeout(()=>{
     overlay.style.opacity=1;
@@ -342,8 +322,8 @@ document.getElementById("overlay").addEventListener("click",()=>{
   overlay.style.pointerEvents="none";
 
   document.getElementById("stars").style.opacity=1;
-  heartEl.style.opacity=1;
-  heartEl.style.transform="scale(1)";
+  heart.style.opacity=1;
+  heart.style.transform="scale(1)";
 
   clearInterval(heartsInterval);
   heartsContainer.innerHTML="";
